@@ -1,19 +1,27 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { HomeComponent } from './home/home.component';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+
 import { AppComponent } from './app.component';
-import { AngularFileUploaderModule } from 'angular-file-uploader';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { AppRoutingModule } from './app.routing.module';
+import { AppStartupModule } from './app.startup.module';
+import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
-  declarations: [
-    AppComponent,
-
-  ],
-  imports: [
-    BrowserModule,
-    AngularFileUploaderModule,
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        AppStartupModule,
+        FormsModule
+    ],
+    declarations: [
+        AppComponent,
+       
+    ],
+    bootstrap: [
+        AppComponent
+    ]
 })
-export class AppModule { }
+export class AppModule {
+}
