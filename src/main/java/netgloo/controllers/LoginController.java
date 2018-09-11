@@ -1,6 +1,7 @@
 package netgloo.controllers;
 
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import netgloo.models.User;
@@ -27,6 +28,15 @@ public class LoginController {
         return modelAndView;
     }
 
+    @RequestMapping(value = {"/","/home"}, method = RequestMethod.GET)
+    public String index(HttpServletRequest request){
+
+        String userAgent=request.getHeader("User-Agent");
+
+        // if(userAgent.split(" ")[0].contains("
+        return "../static/index";
+
+    }
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public ModelAndView signup() {
         ModelAndView modelAndView = new ModelAndView();
@@ -69,12 +79,12 @@ public class LoginController {
         return modelAndView;
     }
 
-    @RequestMapping(value = {"/","/home"}, method = RequestMethod.GET)
-    public ModelAndView home() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("home");
-        return modelAndView;
-    }
+//    @RequestMapping(value = {"/","/home"}, method = RequestMethod.GET)
+//    public ModelAndView home() {
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("home");
+//        return modelAndView;
+//    }
 }
 
 

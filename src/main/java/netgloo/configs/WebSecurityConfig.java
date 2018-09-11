@@ -60,6 +60,7 @@ package netgloo.configs;
 
 import netgloo.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -67,8 +68,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -98,18 +102,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
+
             .authorizeRequests()
             .antMatchers("/").permitAll()
+            .antMatchers("/home").permitAll()
             .antMatchers("/login").permitAll()
             .antMatchers("/signup").permitAll()
             .antMatchers("/dashboard/**").hasAuthority("ADMIN").anyRequest()
-            .authenticated().and().csrf().disable().formLogin().successHandler(customizeAuthenticationSuccessHandler)
+            .permitAll().and().csrf().disable().formLogin().successHandler(customizeAuthenticationSuccessHandler)
             .loginPage("/login").failureUrl("/login?error=true")
             .usernameParameter("email")
             .passwordParameter("password")
             .and().logout()
             .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-            .logoutSuccessUrl("/").and().exceptionHandling();
+            .logoutSuccessUrl("/").and().exceptionHandling().and().sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry());;
   }
 
   @Override
@@ -117,6 +123,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     web
             .ignoring()
             .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
+  }
+
+
+  @Bean
+  public SessionRegistry sessionRegistry() {
+    return new SessionRegistryImpl();
+  }
+
+  @Bean
+  public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
+    return new ServletListenerRegistrationBean<HttpSessionEventPublisher>(new HttpSessionEventPublisher());
   }
 
 }

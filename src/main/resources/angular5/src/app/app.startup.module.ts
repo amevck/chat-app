@@ -7,7 +7,8 @@ import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { UtilityService } from './home/utility.service';
-
+import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
+import { LoginService } from './services/login.service';
 @NgModule({
     imports: [
         CommonModule,
@@ -15,6 +16,7 @@ import { UtilityService } from './home/utility.service';
         FormsModule,
         HttpClientModule,
         HttpModule,
+       
     ],
     declarations: [
         NavMenuComponent,
@@ -24,7 +26,7 @@ import { UtilityService } from './home/utility.service';
         NavMenuComponent,
         HomeComponent
     ],
-    providers: [UtilityService]
+    providers: [UtilityService,LoginService]
 })
 export class AppStartupModule {
 }

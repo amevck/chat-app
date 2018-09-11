@@ -29,5 +29,14 @@ export class UtilityService  {
 
   }
 
+  getOnlineUsers(){
+
+    return this.httpClient.get('/getOnlineUsers');
+  
+  
+    }
+
+
+
 
 }
