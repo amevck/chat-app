@@ -1,5 +1,6 @@
 package netgloo.models;
 
+import java.util.List;
 import java.util.Set;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.IndexDirection;
@@ -18,6 +19,9 @@ public class User {
     private String fullname;
     private String userName;
     private String firstName;
+
+    @DBRef
+    private List<Conversation> conversations;
 
     public String getId() {
         return id;

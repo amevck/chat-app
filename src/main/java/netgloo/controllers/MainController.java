@@ -1,7 +1,10 @@
 package netgloo.controllers;
 
 import netgloo.Notification;
+import netgloo.models.Message;
 import netgloo.models.User;
+import netgloo.repos.MessageRepository;
+import netgloo.services.MessageService;
 import netgloo.services.NotificationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +40,11 @@ public class MainController {
   @Autowired
   private SessionRegistry sessionRegistry;
 
+
+
+  @Autowired
+  private MessageService messageService;
+
   /**
    * GET  /  -> show the index page.
    */
@@ -51,7 +59,11 @@ public class MainController {
   @MessageMapping("/send/message")
   public String notifications(Notification notification) {
 
-    System.out.println("called");
+
+Message message = messageService.SaveMessage(notification);
+if(message == null){
+  System.out.println("not saved");
+}
     notificationService.notify(
             new Notification(notification.getMessage(),notification.getSender(),notification.getReciever()), // notification object
              notification.getReciever()                    // username
