@@ -4,6 +4,9 @@ package netgloo.controllers;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import netgloo.beans.Response;
+import netgloo.enums.Status;
+import netgloo.models.Conversation;
 import netgloo.models.User;
 import netgloo.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +14,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 public class LoginController {
@@ -73,12 +81,33 @@ public class LoginController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByEmail(auth.getName());
         modelAndView.addObject("currentUser", user);
-        modelAndView.addObject("fullName", "Welcome " + user.getFullname());
+        modelAndView.addObject("fullName", "Welcome " + user.getFirstName());
         modelAndView.addObject("adminMessage", "Content Available Only for Users with Admin Role");
         modelAndView.setViewName("dashboard");
         return modelAndView;
     }
 
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @ResponseBody
+    public Response register(@RequestBody User user) {
+        Response response = new Response();
+        try {
+
+            User registeredUser = user;
+            user.setEnabled(true);
+            user.setConversation(new HashSet<>() );
+
+        userService.saveNewUser(user);
+            response.setMessage(Status.USER_SAVED.getDescription());
+            response.setCode(Status.USER_SAVED.getCode());
+
+
+        } catch (Exception e) {
+            response.setMessage(e.getMessage());
+
+        }
+        return response;
+    }
 //    @RequestMapping(value = {"/","/home"}, method = RequestMethod.GET)
 //    public ModelAndView home() {
 //        ModelAndView modelAndView = new ModelAndView();

@@ -16,16 +16,32 @@ public class User {
     @Indexed(unique = true, direction = IndexDirection.DESCENDING, dropDups = true)
     private String email;
     private String password;
-    private String fullname;
     private String userName;
     private String firstName;
 
     @DBRef
-    private List<Conversation> conversations;
+    private Set<Conversation> conversation;
+
+    private String lastName;
+    private boolean enabled;
+    @DBRef
+    private Set<Role> roles;
+
+
+    public void setConversation(Set<Conversation> conversation) {
+        this.conversation = conversation;
+    }
+
 
     public String getId() {
         return id;
     }
+
+    public Set<Conversation> getConversation() {
+        return conversation;
+    }
+
+
 
     public void setId(String id) {
         this.id = id;
@@ -45,14 +61,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
     }
 
     public String getUserName() {
@@ -95,8 +103,7 @@ public class User {
         this.roles = roles;
     }
 
-    private String lastName;
-    private boolean enabled;
-    @DBRef
-    private Set<Role> roles;
+
+
+
 }

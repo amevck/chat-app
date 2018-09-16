@@ -7,6 +7,7 @@ import netgloo.repos.MessageRepository;
 import netgloo.services.MessageService;
 import netgloo.services.NotificationService;
 
+import netgloo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,8 @@ public class MainController {
   @Autowired
   private SessionRegistry sessionRegistry;
 
+  @Autowired
+  private UserService userService;
 
 
   @Autowired
@@ -57,21 +60,9 @@ public class MainController {
    * GET  /notifications  -> show the notifications page.
    */
   @MessageMapping("/send/message")
-  public String notifications(Notification notification) {
+  public String notifications(Principal principal,Notification notification) {
 
-
-Message message = messageService.SaveMessage(notification);
-if(message == null){
-  System.out.println("not saved");
-}
-    notificationService.notify(
-            new Notification(notification.getMessage(),notification.getSender(),notification.getReciever()), // notification object
-             notification.getReciever()                    // username
-    );
-    notificationService.notify(
-            new Notification(notification.getMessage(),notification.getSender(),notification.getReciever()), // notification object
-            notification.getSender()                     // username
-    );
+    messageService.SendMessage(principal,notification);
     return "notifications";
   }
 
@@ -82,10 +73,13 @@ if(message == null){
    */
   @RequestMapping(value = "/getUser", method = RequestMethod.GET)
   @ResponseBody
-  public String getUser(Principal principal) {
-
-
-   return principal.getName();
+  public User getUser(Principal principal) {
+      if(principal != null) {
+          User user = userService.getUserByEmail(principal.getName());
+          user.setPassword("");
+          return user;
+      }
+      return null;
   }
 
   @RequestMapping(value = "/getOnlineUsers", method = RequestMethod.GET)

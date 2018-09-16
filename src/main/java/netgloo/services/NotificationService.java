@@ -2,6 +2,8 @@ package netgloo.services;
 
 import netgloo.Notification;
 
+import netgloo.beans.GenericMessage;
+import netgloo.models.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -21,14 +23,15 @@ public class NotificationService {
    *
    * The message will be sent only to the user with the given username.
    * 
-   * @param notification The notification message.
+   * @param genericMessage The notification message.
    * @param username The username for the user to send notification.
    */
-  public void notify(Notification notification, String username) {
+  public void notify(GenericMessage genericMessage, String username) {
+
     messagingTemplate.convertAndSendToUser(
       username, 
-      "/queue/notify", 
-      notification
+      "/queue/notify",
+            genericMessage
     );
     return;
   }

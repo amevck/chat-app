@@ -41,10 +41,24 @@ public class CustomUserDetailsService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    public void saveNewUser(User userObj) {
+        User user = new User();
+        user.setFirstName(userObj.getFirstName());
+        user.setLastName(userObj.getLastName());
+        user.setUserName(userObj.getUserName());
+        user.setEmail(userObj.getEmail());
+        user.setPassword(bCryptPasswordEncoder.encode(userObj.getPassword()));
+        user.setEnabled(true);
+        Role userRole = roleRepository.findByRole("ADMIN");
+        user.setRoles(new HashSet<>(Arrays.asList(userRole)));
+        userRepository.save(user);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         User user = userRepository.findByEmail(email);
+        user = (user == null)? userRepository.findByUserName(email): user;
         if(user != null) {
             List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());
             return buildUserForAuthentication(user, authorities);

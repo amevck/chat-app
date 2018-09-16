@@ -1,0 +1,65 @@
+package netgloo.enums;
+
+public enum Status {
+
+    DATABASE(0, "A DATABASE ERROR OCCUR."),
+
+    SUCCESS(1, "SUCCESS"),
+    FAIL(-1, "FAIL"),
+
+    UNAUTHORIZED(401, "UNAUTHORIZED ACCESS"),
+
+    USER_SAVED(100, "USER SAVED"),
+    USER_MODIFIED(101, "USER MODIFIED"),
+    USER_NOT_FOUND(102, "USER NOT FOUND"),
+    USER_DELETED(103, "USER DELETED"),
+   
+    USER_SAVE_INTEGRITY_VIOLATION(104, "USER_SAVE_INTEGRITY_VIOLATION"),
+    USER_NOT_SAVED(105, "USER NOT SAVED"),
+    USER_NOT_MODIFIED(106, "USER_NOT_MODIFIED"),
+    USER_NOT_DELETED(107, "USER_NOT_DELETED"),
+    USER_EXISTS(108, "USER EXISTS"),
+    USER_PASSWORD_MISMATCH(109, "USER PASSWORD MISMATCH"),
+    USER_ID_HAS_CANHED(110, "USER_ID_HAS_CANHED"),
+    
+    
+    PASSWORD_REST_INIT_SUCESS(995,"PASSWORD_REST_INIT_SUCESS"),
+    PASSWORD_REST_INIT_FAIL(994,"PASSWORD_REST_INIT_FAIL"),
+    
+    
+    PASSWORD_REST_SUCESS(999,"PASSWORD RESET SUCESS"),
+    PASSWORD_REST_FAIL(998,"PASSWORD RESET FAIL"),
+    
+    
+    PASSWORD_REST_TOKEN_STATUS_SUCESS(997,"PASSWORD_REST_TOKEN_STATUS_SUCESS"),
+    PASSWORD_REST_TOKEN_STATUS_FAIL(996,"PASSWORD_REST_TOKEN_STATUS_FAIL"),
+    
+    PASSWORD_REST_TOKEN_EXPIRED(993,"PASSWORD_REST_TOKEN_EXPIRED"),
+    PASSWORD_REST_TOKEN_NOT_FOND(992,"PASSWORD_REST_TOKEN_NOT_FOND"),
+    
+
+    ROLE_NOT_FOUND(150, "ROLE_NOT_FOUND"),
+
+
+
+
+    ;
+
+    private final int code;
+    private final String description;
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    private Status(int code, String description) {
+        this.code = code;
+        this.description = description;
+    }
+
+
+}
