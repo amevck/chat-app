@@ -109,10 +109,26 @@ export class HomeComponent implements OnInit{
                 }
                 this.utiliyService.getOnlineUsers().subscribe(
                   data => { 
-                    this.onlineUsers = JSON.parse(data["_body"])
-                    this.onlineUsers = this.onlineUsers.filter(user => user!= this.senderName)
-                    this.onlineUsers =  this.onlineUsers.map(user => user = {'userName':user,'messages':[]})
+                    console.log(data)
+                    var allonlineUsers = JSON.parse(data["_body"])
+                    // this.onlineUsers = JSON.parse(data["_body"])
+                    // this.onlineUsers = this.onlineUsers.filter(user => user!= this.senderName)
+                    this.conversations.forEach(conversation => {
+                      console.log(this.senderName == conversation.memberList[0].email?conversation.memberList[1].email:conversation.memberList[0].email)
+                     });
+                    allonlineUsers.forEach(user => {
+                      
+                    console.log(user)
+                   
+                    var inTheQue = this.conversations.filter( conversation => (this.senderName == conversation.memberList[0].email?conversation.memberList[1].email:conversation.memberList[0].email) == user)
+                    console.log(inTheQue)
+                    if(inTheQue.length == 0){
+                      if(this.senderName != user){
+                    this.onlineUsers.push({'userName':user,'messages':[]})
                     console.log(this.onlineUsers)
+                      }
+                    }
+                  });
                   }
                 )
               }
@@ -127,7 +143,23 @@ export class HomeComponent implements OnInit{
               var message = JSON.parse(message.body)
               if(message.type == "CONVERSASION"){
               this.addConversation(message);
-              }else{
+              }else if(message.type == "USER"){
+                console.log(message);
+                console.log(message.obj.email)
+                console.log(this.senderName)
+                if(message.obj.email != this.senderName){
+                  console.log(message.obj.email)
+                  console.log()
+                  var inTheQue = this.conversations.filter( conversation => (this.senderName == conversation.memberList[0].email?conversation.memberList[1].id:conversation.memberList[0].id) == message.obj.id)
+                  if(inTheQue.length == 0){
+                this.onlineUsers.push({'userName':message.obj.email,'messages':[]})
+
+                  }
+                  console.log(inTheQue)
+                console.log(this.onlineUsers);
+                }
+              }
+              else{
             //  this.myMessages.push(message.obj);
             this.addMessageToConversation(message.obj)
               }
@@ -156,10 +188,15 @@ export class HomeComponent implements OnInit{
       }
 
       addConversation(message){
-        var receiver = message.obj.memberList.filter(user => user.email == this.senderName)[0].email;
+        var receiver = message.obj.memberList.filter(user => user.email != this.senderName)[0].email;
          var conv =  message.obj
-        if(!this.conversation || !this.conversation.id){
+         this.onlineUsers = this.onlineUsers.filter( user => user.userName !=  (this.senderName == conv.memberList[0].email?conv.memberList[1].email:conv.memberList[0].email) )
+      console.log(this.conversation)
+      console.log(receiver)
+      console.log(this.reciverName)
+         if(!this.conversation || !this.conversation.id){
           if(this.reciverName == receiver){
+            console.log(conv)
             this.convercationChanged(conv)
           }
          
